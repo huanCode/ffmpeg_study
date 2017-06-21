@@ -1223,11 +1223,20 @@ int ff_interleaved_peek(AVFormatContext *s, int stream,
 }
 
 /**
+
+    正确交错地muxed
  * Interleave an AVPacket correctly so it can be muxed.
+    out:获取要被mux的packet
  * @param out the interleaved packet will be output here
+    in:
  * @param in the input packet
+    flush == 1:表示没有packet再传进来了,剩下的packet可以被输出了
  * @param flush 1 if no further packets are available as input and all
  *              remaining packets should be output
+
+    return 1：正常获取一个packet
+    return 0: 已经没有packet
+    return <0 :发生错误
  * @return 1 if a packet was output, 0 if no packet could be output,
  *         < 0 if an error occurred
  */
