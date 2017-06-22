@@ -142,12 +142,12 @@ static int mov_write_stco_tag(AVIOContext *pb, MOVTrack *track)
     int i;
     int mode64 = co64_required(track); // use 32 bit size variant if possible
     int64_t pos = avio_tell(pb);
-    avio_wb32(pb, 0); /* size */
+    avio_wb32(pb, 0); /* size,先占位,不填大小 */ 
     if (mode64)
         ffio_wfourcc(pb, "co64");
     else
         ffio_wfourcc(pb, "stco");
-    avio_wb32(pb, 0); /* version & flags */
+    avio_wb32(pb, 0); /* version & flags 两个和起来32bit */
     avio_wb32(pb, track->chunkCount); /* entry count */
     for (i = 0; i < track->entry; i++) {
         if (!track->cluster[i].chunkNum)

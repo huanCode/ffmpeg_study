@@ -44,11 +44,14 @@
 #define MODE_F4V  0x80
 
 typedef struct MOVIentry {
-    uint64_t     pos;
+    uint64_t     pos;       // == stco chunk offset,记录这个sample在文件开头的偏移量
+                            //一般在mdat就是chunk数据开始,当mdat距离文件偏移40byte,mdat atom大小为8byte
+                            //那么第一个chunk偏移量就是40 + 8 = 48
     int64_t      dts;
     unsigned int size;
-    unsigned int samples_in_chunk;
+    unsigned int samples_in_chunk;      //chunk中sample的个数
     unsigned int chunkNum;              ///< Chunk number if the current entry is a chunk start otherwise 0
+                                        //当前这个在stco中的序号,1号开始
     unsigned int entries;
     int          cts;
 #define MOV_SYNC_SAMPLE         0x0001
@@ -80,14 +83,14 @@ typedef struct MOVFragmentInfo {
 
 typedef struct MOVTrack {
     int         mode;
-    int         entry;
+    int         entry;      //stco chunk的个数
     unsigned    timescale;
     uint64_t    time;
     int64_t     track_duration;
     int         last_sample_is_subtitle_end;
     long        sample_count;
     long        sample_size;
-    long        chunkCount;
+    long        chunkCount;     //stco chunk的个数
     int         has_keyframes;
 #define MOV_TRACK_CTTS         0x0001
 #define MOV_TRACK_STPS         0x0002
